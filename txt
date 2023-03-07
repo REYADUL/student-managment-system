@@ -1,0 +1,48 @@
+To pass schema validation through the db.collection method in the MongoDB Node.js driver, you can use a validation action that is specified when creating the collection.
+
+Here's an example of how to create a MongoDB collection with a validation schema:
+
+php
+Copy code
+// Assuming you have established a connection to a MongoDB database using the MongoDB Node.js driver
+const MongoClient = require('mongodb').MongoClient;
+const uri = 'mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>?retryWrites=true&w=majority';
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+// Create a collection with a validation schema
+client.connect(err => {
+  const db = client.db('mydb');
+  db.createCollection('scholl', {
+    validator: {
+      $jsonSchema: {
+        bsonType: "object",
+        required: [ "name", "age", "email" ],
+        properties: {
+          name: {
+            bsonType: "string",
+            description: "must be a string and is required"
+          },
+          age: {
+            bsonType: "int",
+            minimum: 0,
+            maximum: 120,
+            description: "must be an integer in the range of 0 to 120 and is required"
+          },
+          email: {
+            bsonType: "string",
+            pattern: "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$",
+            description: "must be a valid email address and is required"
+          }
+        }
+      }
+    }
+  }, (err, result) => {
+    if (err) throw err;
+    console.log("Collection created with validation schema");
+    client.close();
+  });
+});
+
+
+
+
