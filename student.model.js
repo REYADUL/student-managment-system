@@ -38,7 +38,8 @@ const getCollection = ()=>{
                             "Chittagong",
                             "Rajshahi",
                             "Khulna",
-                            "Sylhet"
+                            "Sylhet",
+                            "jessore"
                         ],
                         description:"can only be one of the enum values and is required"
                             
